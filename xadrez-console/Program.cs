@@ -2,6 +2,7 @@
 using tabuleiro;
 using tabuleiro.Enuns;
 using xadrez;
+using tabuleiro.Exceptions;
 
 namespace xadrez_console
 {
@@ -9,15 +10,23 @@ namespace xadrez_console
     {
         static void Main(string[] args)
         {
-            Tabuleiro tab = new Tabuleiro(8, 8);
+            try{
 
-            tab.ColocarPeca(new Torre(tab, Cor.Preta), new Posicao(0, 0));
-            tab.ColocarPeca(new Torre(tab, Cor.Preta), new Posicao(1, 3));
-            tab.ColocarPeca(new Rei(tab, Cor.Preta), new Posicao(2, 4));
-
-            Tela.imprimirTabuleiro(tab);
             
-            Console.ReadLine();
+                Tabuleiro tab = new Tabuleiro(8, 8);
+
+                tab.ColocarPeca(new Torre(tab, Cor.Preta), new Posicao(0, 0));
+                tab.ColocarPeca(new Torre(tab, Cor.Preta), new Posicao(1, 3));
+                tab.ColocarPeca(new Rei(tab, Cor.Preta), new Posicao(0, 9));
+
+                Tela.imprimirTabuleiro(tab);
+            
+                Console.ReadLine();
+            }
+            catch (TabuleiroException e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
