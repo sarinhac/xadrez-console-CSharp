@@ -1,22 +1,23 @@
 ﻿using System;
 using tabuleiro;
 using tabuleiro.Enuns;
+using tabuleiro.Exceptions;
 
 namespace xadrez
 {
     class PartidaDeXadrez
     {
-        private int _turno;
-        private Cor _jogadorAtual;
+        public int Turno { get; private set; }
+        public Cor JogadorAtual { get; private set; }
         public Tabuleiro Tab { get; private set; }
         public bool Terminada { get; private set; }
 
 
         public PartidaDeXadrez()
         {
-            this.Tab = new Tabuleiro(8, 8);
-            this._turno = 1;
-            this._jogadorAtual = Cor.Branca;
+            Tab = new Tabuleiro(8, 8);
+            Turno = 1;
+            JogadorAtual = Cor.Branca;
             Terminada = false;
             ColocarPecas();
         }
@@ -27,6 +28,49 @@ namespace xadrez
             p.IncrementarQtdMovimento();
             Peca PecaCapturada =Tab.RetirarPeca(destino);
             Tab.ColocarPeca(p, destino);
+        }
+
+       public void RealizaJogada(Posicao origem, Posicao destino)
+        {
+            ExecutaMovimento(origem, destino);
+            Turno++;
+            MudaJogador();
+        }
+
+        public void ValidarPosicaoDeOrigem(Posicao pos)
+        {
+            if(Tab.Peca(pos) == null)
+            {
+                throw new TabuleiroException("Não existe peça nesta posição!");
+            }
+            if(JogadorAtual != Tab.Peca(pos).Cor)
+            {
+                throw new TabuleiroException("A peça escolhida não é sua!");
+            }
+            if (!Tab.Peca(pos).ExisteMovimentosPossiveis())
+            {
+                throw new TabuleiroException("Esta peça não pode ser movida, pois está bloqueada!");
+            }
+        }
+
+        public void ValidarPosicaoDeDestino(Posicao origem, Posicao destino)
+        {
+            if (!Tab.Peca(origem).PodeMoverPara(destino))
+            {
+                throw new TabuleiroException("Esta peça não pode fazer esse movimento!");
+            }
+        }
+
+        private void MudaJogador()
+        {
+            if(JogadorAtual == Cor.Branca)
+            {
+                JogadorAtual = Cor.Preta;
+            }
+            else
+            {
+               JogadorAtual = Cor.Branca;
+            }
         }
 
         private void ColocarPecas()
