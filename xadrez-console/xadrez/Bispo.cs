@@ -1,18 +1,21 @@
-﻿using tabuleiro;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using tabuleiro;
 using tabuleiro.Enuns;
 
 namespace xadrez
 {
-    class Torre : Peca
+    class Bispo : Peca
     {
-        public Torre(Tabuleiro tab, Cor cor)
+        public Bispo(Tabuleiro tab, Cor cor)
             : base(cor, tab)
         {
         }
 
         public override string ToString()
         {
-            return "T";
+            return "B";
         }
 
         private bool PodeMover(Posicao pos)
@@ -27,20 +30,9 @@ namespace xadrez
 
             Posicao pos = new Posicao(0, 0);
 
-            //acima
-            pos.DefinirValores(Posicao.Linha - 1, Posicao.Coluna);
-            while(Tabuleiro.PosicaValida(pos) && PodeMover(pos))
-            {
-                mat[pos.Linha, pos.Coluna] = true;
-                if(Tabuleiro.Peca(pos) != null && Tabuleiro.Peca(pos).Cor != Cor)
-                {
-                    break;
-                }
-                pos.Linha -= 1;
-            }
+            //DIAGONAL NORDESTE
+            pos.DefinirValores(Posicao.Linha - 1, Posicao.Coluna + 1);
 
-            //Abaixo
-            pos.DefinirValores(Posicao.Linha + 1, Posicao.Coluna);
             while (Tabuleiro.PosicaValida(pos) && PodeMover(pos))
             {
                 mat[pos.Linha, pos.Coluna] = true;
@@ -48,11 +40,26 @@ namespace xadrez
                 {
                     break;
                 }
-                pos.Linha += 1;
+                pos.Linha -= 1;
+                pos.Coluna += 1;
             }
-            
-            //Direita
-            pos.DefinirValores(Posicao.Linha, Posicao.Coluna + 1);
+
+            //DIAGONAL NOROESTE
+            pos.DefinirValores(Posicao.Linha - 1, Posicao.Coluna -1);
+            while (Tabuleiro.PosicaValida(pos) && PodeMover(pos))
+            {
+                mat[pos.Linha, pos.Coluna] = true;
+                if (Tabuleiro.Peca(pos) != null && Tabuleiro.Peca(pos).Cor != Cor)
+                {
+                    break;
+                }
+                pos.Linha -= 1;
+                pos.Coluna -= 1;
+
+            }
+
+            //DIAGONAL SUDESTE
+            pos.DefinirValores(Posicao.Linha + 1, Posicao.Coluna + 1);
             while (Tabuleiro.PosicaValida(pos) && PodeMover(pos))
             {
                 mat[pos.Linha, pos.Coluna] = true;
@@ -61,10 +68,11 @@ namespace xadrez
                     break;
                 }
                 pos.Coluna += 1;
+                pos.Linha += 1;
             }
 
-            //Direita
-            pos.DefinirValores(Posicao.Linha, Posicao.Coluna - 1);
+            //DIAGONAL SUDOESTE
+            pos.DefinirValores(Posicao.Linha + 1, Posicao.Coluna - 1);
             while (Tabuleiro.PosicaValida(pos) && PodeMover(pos))
             {
                 mat[pos.Linha, pos.Coluna] = true;
@@ -73,6 +81,7 @@ namespace xadrez
                     break;
                 }
                 pos.Coluna -= 1;
+                pos.Linha += 1;
             }
             return mat;
         }
