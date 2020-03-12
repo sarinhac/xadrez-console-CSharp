@@ -101,7 +101,7 @@ namespace xadrez
 
         public void ValidarPosicaoDeDestino(Posicao origem, Posicao destino)
         {
-            if (!Tab.Peca(origem).PodeMoverPara(destino))
+            if (!Tab.Peca(origem).MovimentoPossivel(destino))
             {
                 throw new TabuleiroException("Esta peça não pode fazer esse movimento!");
             }
