@@ -150,15 +150,17 @@ namespace xadrez
 
             Peca p = Tab.Peca(destino);
 
-            // Jogada Especial en passant
-
-            if(p is Peao && (destino.Linha == origem.Linha -2 || destino.Linha == origem.Linha + 2))
+            //#JogadaEspecial Promocao
+            if(p is Peao)
             {
-                VuneravelEnPassant = p;
-            }
-            else
-            {
-                VuneravelEnPassant = null;
+                if((p.Cor == Cor.Branca && destino.Linha == 0) || (p.Cor == Cor.Preta && destino.Linha == 7))
+                {
+                    p = Tab.RetirarPeca(destino);
+                    _pecas.Remove(p);
+                    Peca dama = new Rainha(Tab, p.Cor);
+                    Tab.ColocarPeca(dama, destino);
+                    _pecas.Add(dama);
+                }
             }
 
             if (EstaEmXeque(Adversaria(JogadorAtual)))
@@ -180,9 +182,16 @@ namespace xadrez
                 MudaJogador();
             }
 
+            //#JogadaEspecial en passant
 
-
-           
+            if (p is Peao && (destino.Linha == origem.Linha - 2 || destino.Linha == origem.Linha + 2))
+            {
+                VuneravelEnPassant = p;
+            }
+            else
+            {
+                VuneravelEnPassant = null;
+            }
         }
 
         public void ValidarPosicaoDeOrigem(Posicao pos)
